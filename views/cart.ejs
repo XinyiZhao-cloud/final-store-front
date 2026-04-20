@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="brand">Best Buy Demo Store</div>
+        <nav>
+            <a href="/">Products</a>
+            <a href="/cart">Cart (<%= cartCount %>)</a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <section class="cart-wrapper">
+            <h1>Your Cart</h1>
+
+            <% if (cart.length===0) { %>
+                <div class="empty-box">
+                    <p>Your cart is empty.</p>
+                    <a class="secondary-link" href="/">Back to shopping</a>
+                </div>
+                <% } else { %>
+                    <div class="cart-table">
+                        <div class="cart-head">
+                            <span>Product</span>
+                            <span>Quantity</span>
+                            <span>Price</span>
+                            <span>Total</span>
+                            <span>Action</span>
+                        </div>
+
+                        <% cart.forEach(item=> { %>
+                            <div class="cart-row">
+                                <span>
+                                    <%= item.name %>
+                                </span>
+                                <span>
+                                    <%= item.quantity %>
+                                </span>
+                                <span>$<%= item.price %></span>
+                                <span>$<%= (item.price * item.quantity).toFixed(2) %></span>
+                                <span>
+                                    <form method="POST" action="/cart/remove">
+                                        <input type="hidden" name="productId" value="<%= item.id %>" />
+                                        <button class="danger-btn" type="submit">Remove</button>
+                                    </form>
+                                </span>
+                            </div>
+                            <% }) %>
+                    </div>
+
+                    <div class="checkout-box">
+                        <h2>Order Summary</h2>
+                        <p>Total: <strong>$<%= cartTotal.toFixed(2) %></strong></p>
+
+                        <form method="POST" action="/checkout">
+                            <button type="submit">Checkout</button>
+                        </form>
+                    </div>
+                    <% } %>
+        </section>
+    </main>
+</body>
+
+</html>

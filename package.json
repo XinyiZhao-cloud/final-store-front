@@ -1,0 +1,27 @@
+{
+  "name": "bestbuy-store-front",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XinyiZhao-cloud/final-store-front.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XinyiZhao-cloud/final-store-front/issues"
+  },
+  "homepage": "https://github.com/XinyiZhao-cloud/final-store-front#readme",
+  "dependencies": {
+    "axios": "^1.15.1",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0"
+  }
+}

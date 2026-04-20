@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Best Buy Demo Store</title>
+    <link rel="stylesheet" href="/styles.css" />
+</head>
+
+<body>
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading store...</p>
+    </div>
+
+    <header class="navbar">
+        <div class="brand">Best Buy Demo Store</div>
+        <nav>
+            <a href="/">Products</a>
+            <a href="/cart">
+                Cart
+                <span class="badge">
+                    <%= cartCount %>
+                </span>
+            </a>
+        </nav>
+    </header>
+
+    <main class="page">
+        <section class="hero">
+            <h1>Shop Smart, Demo Better</h1>
+            <p>Cloud-native retail storefront with microservices, cart, and checkout flow.</p>
+        </section>
+
+        <section class="product-grid">
+            <% products.forEach(product=> { %>
+                <div class="card">
+                <img src="<%= product.imageUrl %>" alt="<%= product.name %>" onerror="this.onerror=null; this.src='/images/ps5.png';" />
+
+                    <div class="card-body">
+                        <h3>
+                            <%= product.name %>
+                        </h3>
+                        <p class="desc">
+                            <%= product.description %>
+                        </p>
+                        <p class="price">$<%= product.price %>
+                        </p>
+
+                        <form method="POST" action="/cart/add" onsubmit="this.querySelector('button').disabled=true;">
+                            <input type="hidden" name="productId" value="<%= product.id %>" />
+                            <button type="submit">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+                <% }) %>
+        </section>
+    </main>
+
+<script>
+    function hideLoader() {
+        const overlay = document.getElementById("loading-overlay");
+        if (overlay) {
+            overlay.classList.add("hidden");
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", hideLoader);
+    window.addEventListener("load", hideLoader);
+    setTimeout(hideLoader, 1200);
+</script>
+</body>
+
+</html>
