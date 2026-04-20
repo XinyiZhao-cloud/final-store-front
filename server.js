@@ -55,24 +55,29 @@ app.get("/", async (req, res) => {
 app.post("/cart/add", async (req, res) => {
     initializeCart(req);
 
-    const productId = Number(req.body.productId);
+    const productId = req.body.productId;
 
     try {
         const response = await axios.get(`${PRODUCT_SERVICE_URL}/products`);
         const products = response.data;
-        const product = products.find((p) => Number(p.id) === productId);
+
+        const product = products.find(
+            (p) => String(p._id || p.id) === String(productId)
+        );
 
         if (!product) {
             return res.status(404).send("Product not found");
         }
 
-        const existingItem = req.session.cart.find((item) => Number(item.id) === productId);
+        const existingItem = req.session.cart.find(
+            (item) => String(item.id) === String(productId)
+        );
 
         if (existingItem) {
             existingItem.quantity += 1;
         } else {
             req.session.cart.push({
-                id: product.id,
+                id: product._id || product.id,
                 name: product.name,
                 price: product.price,
                 imageUrl: product.imageUrl,
@@ -99,8 +104,10 @@ app.get("/cart", (req, res) => {
 app.post("/cart/remove", (req, res) => {
     initializeCart(req);
 
-    const productId = Number(req.body.productId);
-    req.session.cart = req.session.cart.filter((item) => Number(item.id) !== productId);
+    const productId = req.body.productId;
+    req.session.cart = req.session.cart.filter(
+        (item) => String(item.id) !== String(productId)
+    );
 
     res.redirect("/cart");
 });
