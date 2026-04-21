@@ -1,4 +1,4 @@
-name: Order Service CI/CD
+name: Store Front CI/CD
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: xyzhao0201/bestbuy-order-service:latest
+          tags: xyzhao0201/bestbuy-store-front:latest
 
       - name: Set kubeconfig
         run: |
