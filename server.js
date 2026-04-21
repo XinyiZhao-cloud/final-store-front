@@ -1,3 +1,30 @@
+/**
+ * CST8915 Final Project - Store Front Service
+ *
+ * Author: Xinyi Zhao
+ * Course: CST8915 Full-stack Cloud-native Development
+ * Semester: Winter 2026
+ *
+ * Description:
+ * This service provides the customer-facing web interface.
+ * It allows users to browse products, add items to cart, and checkout.
+ *
+ * Architecture Role:
+ * - Frontend service deployed in Kubernetes
+ * - Communicates with Product Service and Order Service via HTTP
+ * - Manages user session and cart state
+ *
+ * Features:
+ * - Display product catalog
+ * - Add/remove items from cart
+ * - Checkout and create orders
+ * - Session-based cart management
+ *
+ * Note:
+ * - Uses EJS for server-side rendering
+ * - Static assets (images) served from public folder
+ * - Entry point for end users
+ */
 const express = require("express");
 const axios = require("axios");
 const session = require("express-session");
@@ -5,13 +32,25 @@ const path = require("path");
 
 const app = express();
 
+// ==============================
+// View Engine Setup
+// ==============================
+// Uses EJS templates to render dynamic HTML pages
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// ==============================
+// Middleware
+// ==============================
+// Parse form data, parse JSON, and serve static assets
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// ==============================
+// Session Configuration
+// ==============================
+// Stores cart data per user sessio
 app.use(
     session({
         secret: "bestbuy-demo-secret",
@@ -20,24 +59,39 @@ app.use(
     })
 );
 
+// ==============================
+// Configuration
+// ==============================
 const PORT = process.env.PORT || 3000;
+
+// Internal service endpoints (Kubernetes services)
 const PRODUCT_SERVICE_URL = process.env.PRODUCT_SERVICE_URL || "http://localhost:3001";
 const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || "http://localhost:3002";
 
+// ==============================
+// Helper Functions
+// ==============================
+// Ensure the current session always has a cart array
 function initializeCart(req) {
     if (!req.session.cart) {
         req.session.cart = [];
     }
 }
 
+// Count total quantity of items in cart
 function getCartCount(cart) {
     return cart.reduce((sum, item) => sum + item.quantity, 0);
 }
 
+// Calculate total price of all items in cart
 function getCartTotal(cart) {
     return cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 }
 
+// ==============================
+// Home Page
+// ==============================
+// Fetch products from Product Service and render storefront
 app.get("/", async (req, res) => {
     initializeCart(req);
 
@@ -52,6 +106,11 @@ app.get("/", async (req, res) => {
     }
 });
 
+// ==============================
+// Add Item to Cart
+// ==============================
+// Finds the selected product from Product Service and stores
+// it in session cart. Supports MongoDB _id or legacy id values.
 app.post("/cart/add", async (req, res) => {
     initializeCart(req);
 
@@ -91,6 +150,10 @@ app.post("/cart/add", async (req, res) => {
     }
 });
 
+// ==============================
+// View Cart
+// ==============================
+// Renders the cart page with session-based cart data
 app.get("/cart", (req, res) => {
     initializeCart(req);
 
@@ -101,6 +164,10 @@ app.get("/cart", (req, res) => {
     });
 });
 
+// ==============================
+// Remove Item from Cart
+// ==============================
+// Removes a selected item from the session cart
 app.post("/cart/remove", (req, res) => {
     initializeCart(req);
 
@@ -112,6 +179,11 @@ app.post("/cart/remove", (req, res) => {
     res.redirect("/cart");
 });
 
+// ==============================
+// Checkout
+// ==============================
+// Sends order data to Order Service, then clears the cart
+// and renders an order confirmation page
 app.post("/checkout", async (req, res) => {
     initializeCart(req);
 
@@ -136,6 +208,7 @@ app.post("/checkout", async (req, res) => {
         const orderedItems = [...req.session.cart];
         const total = getCartTotal(orderedItems);
 
+        // Clear cart after successful checkout
         req.session.cart = [];
 
         res.render("success", {
@@ -149,6 +222,9 @@ app.post("/checkout", async (req, res) => {
     }
 });
 
+// ==============================
+// Start Server
+// ==============================
 app.listen(PORT, () => {
     console.log(`Store Front running on port ${PORT}`);
 });
