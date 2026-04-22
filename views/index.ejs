@@ -1,3 +1,5 @@
+<!-- Store Front View -->
+<!-- Displays product catalog, handles image fallback logic, and supports cart operations -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,11 +11,13 @@
 </head>
 
 <body>
+    <!-- Loading Overlay -->
     <div id="loading-overlay">
         <div class="spinner"></div>
         <p>Loading store...</p>
     </div>
 
+    <!-- Navigation Bar -->
     <header class="navbar">
         <div class="brand">Best Buy Demo Store</div>
         <nav>
@@ -28,11 +32,13 @@
     </header>
 
     <main class="page">
+        <!-- Hero Section -->
         <section class="hero">
             <h1>Shop Smart, Demo Better</h1>
             <p>Cloud-native retail storefront with microservices, cart, and checkout flow.</p>
         </section>
 
+        <!-- Product Grid -->
         <section class="product-grid">
             <% products.forEach(product=> { %>
                 <div class="card">
@@ -44,10 +50,12 @@
                     name.includes("playstation")) { resolvedImage="/images/ps5.png" ; } else {
                     resolvedImage="https://dummyimage.com/400x260/e5e7eb/555555&text=No+Image" ; } } %>
                 
+                    <!-- Product Image -->
                     <img src="<%= resolvedImage %>" alt="<%= product.name %>"
                         onerror="this.onerror=null; this.src='https://dummyimage.com/400x260/e5e7eb/555555&text=No+Image';" />
 
                     <div class="card-body">
+                        <!-- Product Info -->
                         <h3>
                             <%= product.name %>
                         </h3>
@@ -57,6 +65,7 @@
                         <p class="price">$<%= product.price %>
                         </p>
 
+                        <!-- Add to Cart -->
                         <form method="POST" action="/cart/add" onsubmit="this.querySelector('button').disabled=true;">
                             <input type="hidden" name="productId" value="<%= product._id || product.id %>" />
                             <button type="submit">Add to Cart</button>
@@ -67,6 +76,7 @@
         </section>
     </main>
 
+    <!-- Loading Overlay Script -->
 <script>
     function hideLoader() {
         const overlay = document.getElementById("loading-overlay");

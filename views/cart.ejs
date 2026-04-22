@@ -1,3 +1,6 @@
+<!-- Cart Page View  -->
+<!-- Displays items in the shopping cart and allows checkout or removal  -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +12,7 @@
 </head>
 
 <body>
+    <!-- Navigation Bar -->
     <header class="navbar">
         <div class="brand">Best Buy Demo Store</div>
         <nav>
@@ -21,12 +25,14 @@
         <section class="cart-wrapper">
             <h1>Your Cart</h1>
 
+            <!-- Empty Cart State -->
             <% if (cart.length===0) { %>
                 <div class="empty-box">
                     <p>Your cart is empty.</p>
                     <a class="secondary-link" href="/">Back to shopping</a>
                 </div>
                 <% } else { %>
+                    <!-- Cart Items Table -->
                     <div class="cart-table">
                         <div class="cart-head">
                             <span>Product</span>
@@ -36,6 +42,7 @@
                             <span>Action</span>
                         </div>
 
+                        <!-- Loop through cart items -->
                         <% cart.forEach(item=> { %>
                             <div class="cart-row">
                                 <span>
@@ -46,6 +53,8 @@
                                 </span>
                                 <span>$<%= item.price %></span>
                                 <span>$<%= (item.price * item.quantity).toFixed(2) %></span>
+                                
+                                <!-- Remove item from cart -->
                                 <span>
                                     <form method="POST" action="/cart/remove">
                                         <input type="hidden" name="productId" value="<%= item.id %>" />
@@ -56,6 +65,7 @@
                             <% }) %>
                     </div>
 
+                    <!-- Checkout Section -->
                     <div class="checkout-box">
                         <h2>Order Summary</h2>
                         <p>Total: <strong>$<%= cartTotal.toFixed(2) %></strong></p>

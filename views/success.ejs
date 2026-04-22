@@ -1,3 +1,5 @@
+<!-- Order Confirmation View -->
+<!-- Displays order details after successful checkout -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,6 +11,7 @@
 </head>
 
 <body>
+    <!-- Navigation Bar -->
     <header class="navbar">
         <div class="brand">Best Buy Demo Store</div>
         <nav>
@@ -19,10 +22,12 @@
 
     <main class="page">
         <section class="success-box">
+            <!-- Confirmation Message -->
             <h1>Order Confirmed 🎉</h1>
             <p>Your order has been placed successfully.</p>
 
             <div class="order-card">
+                <!-- Order Summary -->
                 <p><strong>Order ID:</strong>
                     <%= order.id %>
                 </p>
@@ -37,6 +42,7 @@
             </div>
 
             <h2>Items</h2>
+            <!-- Ordered Items List -->
             <ul class="success-list">
                 <% orderedItems.forEach(item=> { %>
                     <li>
@@ -45,6 +51,7 @@
                     <% }) %>
             </ul>
 
+            <!-- Back to Store -->
             <a class="secondary-link" href="/">Continue Shopping</a>
         </section>
     </main>
